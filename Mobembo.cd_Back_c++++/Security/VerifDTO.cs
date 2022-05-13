@@ -2,7 +2,7 @@
 
 namespace Mobembo.cd_Back_c____.Security
 {
-    public class VerifDTO
+    public class VerifDTO : ValidationAttribute
     {
 
         private Context Context = new Context();
@@ -28,7 +28,7 @@ namespace Mobembo.cd_Back_c____.Security
 
         public bool EmailExiste(string email)
         {
-            if (Context.personnes.FirstOrDefault(x => x.Contact.Email == email) != null)
+            if (Context.personnes.FirstOrDefault(x => x.Email == email) != null)
                 return false;
 
             return true;

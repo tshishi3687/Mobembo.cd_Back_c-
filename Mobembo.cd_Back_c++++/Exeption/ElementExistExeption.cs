@@ -2,9 +2,9 @@
 {
     public sealed class ElementExistExeption<TEntity> : Exception
     {
-        private Object Id;
+        private int Id;
 
-        public ElementExistExeption(Object Id) : base($"l'élément que vous voulez créer existe déjà" +
+        public ElementExistExeption(int Id) : base($"l'élément que vous voulez créer existe déjà" +
                 $"\n\t-class: {typeof(TEntity).Name} ;" +
                $"\n\t-id:.{Id}")
         {

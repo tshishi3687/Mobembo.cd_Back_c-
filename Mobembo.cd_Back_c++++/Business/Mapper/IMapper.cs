@@ -3,6 +3,6 @@
     public interface IMapper<DTO, EnTity>
     {
         DTO toDTO(EnTity Entity);
-        EnTity toEntity(int id, DTO DTO);
+        EnTity toEntity(DTO DTO);
     }
 }

@@ -22,7 +22,39 @@ namespace Mobembo.cd_Back_c____.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.ContactPersonne", b =>
+            modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.AdressePersonne", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("CodePostalLocalite")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("NomRue")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("NumHabitation")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<int>("PaysId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id")
+                        .HasName("PK_adresse_personne");
+
+                    b.HasIndex("PaysId");
+
+                    b.ToTable("AdressePersonne", (string)null);
+                });
+
+            modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.ALaDisposition", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -30,26 +62,134 @@ namespace Mobembo.cd_Back_c____.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("NomDuDisponible")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id")
+                        .HasName("PK_disposition");
+
+                    b.HasIndex("NomDuDisponible")
+                        .IsUnique();
+
+                    b.ToTable("AlaDisposition", (string)null);
+
+                    b.HasCheckConstraint("CheckMinMail", "LEN(NomDuDisponible)>=2");
+                });
+
+            modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.ALaDispositionBien", b =>
+                {
+                    b.Property<int>("BienId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ALaDispositionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("BienId", "ALaDispositionId");
+
+                    b.HasIndex("ALaDispositionId");
+
+                    b.ToTable("aLaDispositionBiens");
+                });
+
+            modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.Bien", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("AppartientAId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CoordonneeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int>("NChambre")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NPMax")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NPMin")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NSDB")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NWC")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Prix")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Superficie")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TypeBienId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id")
+                        .HasName("PK_Bien");
+
+                    b.HasIndex("AppartientAId");
+
+                    b.HasIndex("CoordonneeId");
+
+                    b.HasIndex("TypeBienId");
+
+                    b.ToTable("Bien", (string)null);
+
+                    b.HasCheckConstraint("CheckMinMail", "LEN(Description)>=50", c => c.HasName("CheckMinMail1"));
+                });
+
+            modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.Coordonnee", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CPostal")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(320)
-                        .HasColumnType("nvarchar(320)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Num")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Rue")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Telephone")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.Property<int>("VilleID")
+                        .HasColumnType("int");
 
-                    b.HasIndex("Email")
-                        .IsUnique();
+                    b.HasKey("Id")
+                        .HasName("PK_coordonnee");
 
-                    b.ToTable("ContactPersonne", (string)null);
+                    b.HasIndex("VilleID");
 
-                    b.HasCheckConstraint("CheckMinMail", "LEN(Email)>=6");
+                    b.ToTable("Coordonnee", (string)null);
                 });
 
-            modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.PassWord", b =>
+            modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.Pays", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -57,20 +197,33 @@ namespace Mobembo.cd_Back_c____.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
-                    b.Property<string>("Mdp")
+                    b.Property<string>("Alpha2")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
-                    b.HasKey("Id");
+                    b.Property<string>("Alpha3")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
-                    b.ToTable("PassWord", (string)null);
+                    b.Property<int>("Code")
+                        .HasColumnType("int");
 
-                    b.HasCheckConstraint("CheckMinMail", "LEN(Mdp)>=6", c => c.HasName("CheckMinMail1"));
+                    b.Property<string>("NomEnGb")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("NomFrFr")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("Id")
+                        .HasName("PK_pays");
+
+                    b.ToTable("Pays", (string)null);
                 });
 
             modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.Personne", b =>
@@ -79,35 +232,114 @@ namespace Mobembo.cd_Back_c____.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("DateExpiration")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("Ddn")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Mdp")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nom")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("NomBanque")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("Null");
+
+                    b.Property<string>("NumCarte")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("Null");
+
+                    b.Property<string>("NumCompte")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("Null");
+
                     b.Property<string>("Prenom")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("RolePersonneId")
-                        .HasColumnType("int");
+                    b.Property<string>("Telephone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id")
                         .HasName("PK_personne");
 
-                    b.HasIndex("RolePersonneId");
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("Personne", (string)null);
 
                     b.HasCheckConstraint("CheckAdult", "DateDiff(year, Ddn, GetDate())>=18");
 
+                    b.HasCheckConstraint("CheckMinMail", "LEN(Email)>=6", c => c.HasName("CheckMinMail2"));
+
                     b.HasCheckConstraint("CheckMinNom", "LEN(Prenom)>=3");
                 });
 
-            modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.RolePersonne", b =>
+            modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.PersonnesRoles", b =>
+                {
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PersonneId")
+                        .HasColumnType("int");
+
+                    b.HasKey("RoleId", "PersonneId");
+
+                    b.HasIndex("PersonneId");
+
+                    b.ToTable("PersonneRoles");
+                });
+
+            modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.Province", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("NomProvince")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id")
+                        .HasName("PK_province");
+
+                    b.ToTable("Province", (string)null);
+
+                    b.HasCheckConstraint("CheckMinMail", "LEN(Description)>=50", c => c.HasName("CheckMinMail3"));
+                });
+
+            modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.Role", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -138,49 +370,208 @@ namespace Mobembo.cd_Back_c____.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.TypeBien", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("NomType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id")
+                        .HasName("PK_type_bien");
+
+                    b.ToTable("TypeBien", (string)null);
+                });
+
+            modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.Ville", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NHabitant")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NomVille")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProvinceId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id")
+                        .HasName("PK_ville");
+
+                    b.HasIndex("ProvinceId");
+
+                    b.ToTable("Ville", (string)null);
+                });
+
+            modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.AdressePersonne", b =>
+                {
+                    b.HasOne("Mobembo.cd_Back_c____.Data_Access.Entity.Personne", "AppartienA")
+                        .WithOne("AdressePersonne")
+                        .HasForeignKey("Mobembo.cd_Back_c____.Data_Access.Entity.AdressePersonne", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Mobembo.cd_Back_c____.Data_Access.Entity.Pays", "Pays")
+                        .WithMany("Adresses")
+                        .HasForeignKey("PaysId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppartienA");
+
+                    b.Navigation("Pays");
+                });
+
+            modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.ALaDispositionBien", b =>
+                {
+                    b.HasOne("Mobembo.cd_Back_c____.Data_Access.Entity.ALaDisposition", "ALaDispositions")
+                        .WithMany("Bien")
+                        .HasForeignKey("ALaDispositionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Mobembo.cd_Back_c____.Data_Access.Entity.Bien", "Biens")
+                        .WithMany("AlaDisposition")
+                        .HasForeignKey("BienId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ALaDispositions");
+
+                    b.Navigation("Biens");
+                });
+
+            modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.Bien", b =>
+                {
+                    b.HasOne("Mobembo.cd_Back_c____.Data_Access.Entity.Personne", "AppartientA")
+                        .WithMany("biens")
+                        .HasForeignKey("AppartientAId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Mobembo.cd_Back_c____.Data_Access.Entity.Coordonnee", "Coordonnee")
+                        .WithMany("Biens")
+                        .HasForeignKey("CoordonneeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Mobembo.cd_Back_c____.Data_Access.Entity.TypeBien", "TypeBien")
+                        .WithMany("Biens")
+                        .HasForeignKey("TypeBienId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppartientA");
+
+                    b.Navigation("Coordonnee");
+
+                    b.Navigation("TypeBien");
+                });
+
+            modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.Coordonnee", b =>
+                {
+                    b.HasOne("Mobembo.cd_Back_c____.Data_Access.Entity.Ville", "Ville")
+                        .WithMany("Coordonnees")
+                        .HasForeignKey("VilleID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Ville");
+                });
+
+            modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.PersonnesRoles", b =>
+                {
+                    b.HasOne("Mobembo.cd_Back_c____.Data_Access.Entity.Personne", "Personnes")
+                        .WithMany("Roles")
+                        .HasForeignKey("PersonneId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Mobembo.cd_Back_c____.Data_Access.Entity.Role", "Roles")
+                        .WithMany("Personnes")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Personnes");
+
+                    b.Navigation("Roles");
+                });
+
+            modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.Ville", b =>
+                {
+                    b.HasOne("Mobembo.cd_Back_c____.Data_Access.Entity.Province", "Province")
+                        .WithMany("Villes")
+                        .HasForeignKey("ProvinceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Province");
+                });
+
+            modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.ALaDisposition", b =>
+                {
+                    b.Navigation("Bien");
+                });
+
+            modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.Bien", b =>
+                {
+                    b.Navigation("AlaDisposition");
+                });
+
+            modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.Coordonnee", b =>
+                {
+                    b.Navigation("Biens");
+                });
+
+            modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.Pays", b =>
+                {
+                    b.Navigation("Adresses");
+                });
+
             modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.Personne", b =>
                 {
-                    b.HasOne("Mobembo.cd_Back_c____.Data_Access.Entity.ContactPersonne", "Contact")
-                        .WithOne("AppartientA")
-                        .HasForeignKey("Mobembo.cd_Back_c____.Data_Access.Entity.Personne", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_Contact_Personne");
-
-                    b.HasOne("Mobembo.cd_Back_c____.Data_Access.Entity.PassWord", "mdp")
-                        .WithOne("AppartientA")
-                        .HasForeignKey("Mobembo.cd_Back_c____.Data_Access.Entity.Personne", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.Navigation("AdressePersonne")
                         .IsRequired();
 
-                    b.HasOne("Mobembo.cd_Back_c____.Data_Access.Entity.RolePersonne", "RolePersonne")
-                        .WithMany("Personnes")
-                        .HasForeignKey("RolePersonneId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Roles");
 
-                    b.Navigation("Contact");
-
-                    b.Navigation("RolePersonne");
-
-                    b.Navigation("mdp");
+                    b.Navigation("biens");
                 });
 
-            modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.ContactPersonne", b =>
+            modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.Province", b =>
                 {
-                    b.Navigation("AppartientA")
-                        .IsRequired();
+                    b.Navigation("Villes");
                 });
 
-            modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.PassWord", b =>
-                {
-                    b.Navigation("AppartientA")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.RolePersonne", b =>
+            modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.Role", b =>
                 {
                     b.Navigation("Personnes");
+                });
+
+            modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.TypeBien", b =>
+                {
+                    b.Navigation("Biens");
+                });
+
+            modelBuilder.Entity("Mobembo.cd_Back_c____.Data_Access.Entity.Ville", b =>
+                {
+                    b.Navigation("Coordonnees");
                 });
 #pragma warning restore 612, 618
         }
